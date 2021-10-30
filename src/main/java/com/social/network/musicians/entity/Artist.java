@@ -32,11 +32,19 @@ public class Artist {
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
+            name = "Band_Artist",
+            joinColumns = { @JoinColumn(name = "artist_id") },
+            inverseJoinColumns = { @JoinColumn(name = "band_id") }
+    )
+    private Set<Band> bands = new HashSet<>();
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
             name = "Artist_Skill",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "skill_id") }
     )
-    private Set<Skill> skills = new HashSet<>();;
+    private Set<Skill> skills = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATEFORMAT)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

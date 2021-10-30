@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Artist")
+@Table(name = "Band")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,8 +30,8 @@ public class Band {
 
     private String description;
 
-    @OneToMany(mappedBy="cart")
-    private Set<Artist> artists = new HashSet<>();;
+    @ManyToMany(mappedBy="bands")
+    private Set<Artist> artists = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATEFORMAT)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

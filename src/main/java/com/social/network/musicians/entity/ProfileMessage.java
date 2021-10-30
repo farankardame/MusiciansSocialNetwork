@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Artist")
+@Table(name = "Profile_Message")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,8 +28,12 @@ public class ProfileMessage {
 
     private String message;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "band_id", referencedColumnName = "id")
     private Band band;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "artist_id", referencedColumnName = "id")
     private Artist artist;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATEFORMAT)
