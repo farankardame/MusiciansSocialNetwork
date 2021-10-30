@@ -31,7 +31,7 @@ public class Skill {
     private String description;
 
     @ManyToMany(mappedBy = "skills")
-    private Set<Artist> artists = new HashSet<>();;
+    private Set<Artist> artists = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATEFORMAT)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

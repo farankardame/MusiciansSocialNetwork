@@ -50,7 +50,7 @@ public class ArtistResourceTest {
     @Test
     public void shouldCreateArtistProfile() throws Exception {
         mockMvc.perform(
-                post("/v1/artists/" + ARTIST_ID)
+                post("/v1/artists")
                         .accept(APPLICATION_JSON_VALUE)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(new ObjectMapper().writeValueAsString(ArtistDto.builder().build())))
