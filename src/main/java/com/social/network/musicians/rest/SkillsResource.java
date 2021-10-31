@@ -1,6 +1,7 @@
 package com.social.network.musicians.rest;
 
-import com.social.network.musicians.entity.Skill;
+import com.social.network.musicians.dto.SkillDto;
+import com.social.network.musicians.service.SkillService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,9 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 public class SkillsResource {
 
-    @RequestMapping(value = "/v1/skills//artist/{artistId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    private SkillService skillService;
+
+    @RequestMapping(value = "/v1/skills/artist/{artistId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<Skill> findSkills(@PathVariable final String artistId){
-        return List.of(Skill.builder().build());
+    public List<SkillDto> findSkills(@PathVariable final String artistId){
+        return skillService.findSkills(artistId);
+    }
+
+    @RequestMapping(value = "/v1/skills/artist/{artistId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addSkill(@PathVariable final String artistId, @RequestBody SkillDto skillDto){
+        skillService.addSkill(artistId,skillDto);
     }
 }

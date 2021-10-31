@@ -1,10 +1,7 @@
 package com.social.network.musicians.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import springfox.documentation.annotations.ApiIgnore;
@@ -20,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ApiIgnore
+@EqualsAndHashCode
 public class Artist {
 
     private static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -32,7 +30,7 @@ public class Artist {
 
     private String description;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "Band_Artist",
             joinColumns = { @JoinColumn(name = "artist_id") },

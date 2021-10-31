@@ -50,7 +50,7 @@ public class BandResourceTest {
     @Test
     public void shouldCreateBandProfile() throws Exception {
         mockMvc.perform(
-                post("/v1/bands/" + BAND_ID)
+                post("/v1/bands")
                         .accept(APPLICATION_JSON_VALUE)
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(new ObjectMapper().writeValueAsString(BandDto.builder().build())))
