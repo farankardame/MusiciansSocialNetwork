@@ -1,0 +1,16 @@
+version: "2"
+services:
+  jdk:
+    image: docker.impello.co.uk/dbi__java11--jdk:11.0.3-3.6.1-1
+    volumes:
+      - ${PWD}:${PWD}
+      - ../.tools/mvn/repository:/usr/share/maven/repository
+    working_dir: ${PWD}
+    user: ${USER_ID}
+
+  mvn:
+    extends:
+      service: jdk
+    entrypoint: mvn -T 1C
+    environment:
+      MAVEN_OPTS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1

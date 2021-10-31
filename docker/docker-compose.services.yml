@@ -1,0 +1,28 @@
+version: "2"
+services:
+  postgres:
+    image: docker.impello.co.uk/hub__postgres:9.4
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: msn
+      POSTGRES_USER: msn
+      POSTGRES_DB: msn
+    volumes:
+      - ./db/msn_database:/docker-entrypoint-initdb.d
+    volumes_from:
+      - postgres-files
+
+  postgres-files:
+    image: docker.impello.co.uk/hub__postgres:9.4
+    command: "true"
+
+  wiremock:
+    image: docker.impello.co.uk/hub__rodolpheche--wiremock:2.26.3
+    volumes:
+      - ../src/test/resources/wiremock:/home/wiremock
+    expose:
+      - 8080
+    env_file: .env

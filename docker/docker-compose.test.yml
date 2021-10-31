@@ -1,0 +1,29 @@
+version: "2"
+services:
+  functional-tests:
+    extends:
+      file: docker-compose.build.yml
+      service: mvn
+    links:
+      - app
+      - postgres
+      - wiremock
+    volumes:
+      - ../.tools/functional-tests:/scripts/
+      - ../functiontest/:$PWD
+    environment:
+      - HOST=app
+      - PORT=8080
+      - DATABASE_HOST=postgres
+    entrypoint: /scripts/wait.sh
+    command: mvn -B clean verify
+    env_file: .env.test
+
+  app:
+    image: ${IMAGE}
+    expose:
+      - 8080
+    links:
+      - postgres
+      - wiremock
+    env_file: .env

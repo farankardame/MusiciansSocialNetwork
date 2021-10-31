@@ -1,0 +1,7 @@
+version: "2"
+services:
+  app:
+    ports:
+      - "5005:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005"
