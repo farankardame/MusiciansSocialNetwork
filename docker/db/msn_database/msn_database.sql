@@ -28,9 +28,13 @@ CREATE TABLE IF NOT EXISTS Skill
 CREATE TABLE IF NOT EXISTS Profile_Message
 (
     id                             SERIAL      NOT NULL PRIMARY KEY,
+    artist_id                      INT,
+    band_id                      INT,
     created_date                   TIMESTAMP   NOT NULL DEFAULT now(),
     updated_date                   TIMESTAMP   NOT NULL DEFAULT now(),
-    message                        TEXT
+    message                        TEXT,
+    CONSTRAINT fk_messageartist FOREIGN KEY(artist_id) REFERENCES artist(id),
+    CONSTRAINT fk_messageband FOREIGN KEY(band_id) REFERENCES band(id)
 );
 
 CREATE TABLE IF NOT EXISTS Artist_Skill

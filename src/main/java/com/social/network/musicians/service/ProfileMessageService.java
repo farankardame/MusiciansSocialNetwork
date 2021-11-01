@@ -1,11 +1,13 @@
 package com.social.network.musicians.service;
 
-import com.social.network.musicians.dto.SkillDto;
+import com.social.network.musicians.dto.ProfileMessageDto;
 import com.social.network.musicians.entity.Artist;
+import com.social.network.musicians.entity.Band;
+import com.social.network.musicians.entity.ProfileMessage;
 import com.social.network.musicians.entity.Skill;
 import com.social.network.musicians.repository.ArtistRepository;
+import com.social.network.musicians.repository.BandRepository;
 import com.social.network.musicians.repository.ProfileMessageRepository;
-import com.social.network.musicians.repository.SkillsRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -13,42 +15,41 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ProfileMessageService {
 
-    private SkillsRepository skillsRepository;
-
     private ArtistRepository artistRepository;
+
+    private BandRepository bandRepository;
 
     private ProfileMessageRepository profileMessageRepository;
 
-    public List<SkillDto> findProfileMessages(final String artistId){
+    public List<ProfileMessageDto> findProfileMessages(final String artistId) {
         validateId(artistId);
 
         Optional<Artist> artist = artistRepository.findById(Long.valueOf(artistId));
 
-        if(artist.isPresent()){
-            return artist.get().getSkills().stream()
-                     .map(this::mapSkillToSkillDto)
+        if (artist.isPresent()) {
+            return artist.get().getProfileMessages().stream()
+                    .map(this::mapProfileMessageToProfileMessageDto)
                     .collect(Collectors.toList());
         }
 
         return null;
     }
 
-    public void addSkill(final String artistId, final SkillDto skillDto){
-        validateId(artistId);
-        Artist artist = artistRepository.findById(Long.valueOf(artistId)).orElse(null);
+    public ProfileMessageDto profileMessageService(final ProfileMessageDto profileMessage) {
+        return mapProfileMessageToProfileMessageDto(
+                profileMessageRepository.save(mapProfileMessageDtoToProfileMessage(profileMessage, null)));
+    }
 
-        if(artist != null) {
-            Skill skill = mapSkillDtoToSkill(skillDto, null);
-            skill.setArtists(Set.of(artist));
-            skillsRepository.save(skill);
-        }
+    public ProfileMessageDto updateProfileMessage(final String messageId, final ProfileMessageDto profileMessageDto) {
+        validateId(messageId);
+        return mapProfileMessageToProfileMessageDto(
+                profileMessageRepository.save(mapProfileMessageDtoToProfileMessage(profileMessageDto, messageId)));
     }
 
     private void validateId(String id) {
@@ -57,23 +58,38 @@ public class ProfileMessageService {
             throw new IllegalArgumentException("Invalid ID " + id);
     }
 
-    private SkillDto mapSkillToSkillDto(final Skill skill) {
-        if (skill == null)
+    private ProfileMessageDto mapProfileMessageToProfileMessageDto(final ProfileMessage profileMessage) {
+        if (profileMessage == null)
             return null;
-        return SkillDto.builder()
-                .id(skill.getId())
-                .description(skill.getDescription())
-                .name(skill.getName())
+        return ProfileMessageDto.builder()
+                .id(profileMessage.getId())
+                .message(profileMessage.getMessage())
+                .artistId(profileMessage.getArtist()!=null?profileMessage.getArtist().getId():null)
+                .bandId(profileMessage.getBand()!=null?profileMessage.getBand().getId():null)
                 .build();
     }
 
-    private Skill mapSkillDtoToSkill(final SkillDto skillDto, final String skillId) {
-        if (skillDto == null)
+    private ProfileMessage mapProfileMessageDtoToProfileMessage(final ProfileMessageDto profileMessageDto,
+            final String profileMessageId) {
+        if (profileMessageDto == null)
             return null;
-        return Skill.builder()
-                .id(StringUtils.isNotBlank(skillId) ? Long.valueOf(skillId) : skillDto.getId())
-                .description(skillDto.getDescription())
-                .name(skillDto.getName())
+
+        Artist artist = null;
+        Band band = null;
+
+        if(profileMessageDto.getArtistId()!=null){
+            artist = artistRepository.findById(profileMessageDto.getArtistId()).orElse(null);
+        }
+        if(profileMessageDto.getBandId()!=null){
+            band = bandRepository.findById(profileMessageDto.getBandId()).orElse(null);
+        }
+        return ProfileMessage.builder()
+                .id(StringUtils.isNotBlank(profileMessageId) ?
+                        Long.valueOf(profileMessageId) :
+                        profileMessageDto.getId())
+                .message(profileMessageDto.getMessage())
+                .artist(artist)
+                .band(band)
                 .build();
     }
 

@@ -1,6 +1,5 @@
 package com.social.network.musicians.dto;
 
-import com.social.network.musicians.entity.Band;
 import lombok.*;
 
 @Data
@@ -15,7 +14,7 @@ public class ProfileMessageDto {
 
     private String message;
 
-    private Band band;
+    private Long bandId;
 
-    private long artistId;
+    private Long artistId;
 }

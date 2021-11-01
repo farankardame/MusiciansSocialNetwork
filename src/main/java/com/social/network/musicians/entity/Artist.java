@@ -46,6 +46,9 @@ public class Artist {
     )
     private Set<Skill> skills = new HashSet<>();
 
+    @OneToMany(mappedBy="artist")
+    private Set<ProfileMessage> profileMessages = new HashSet<>();
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATEFORMAT)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @UpdateTimestamp

@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @ApiIgnore
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"band", "artist"})
 public class ProfileMessage {
 
     private static final String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -28,11 +28,11 @@ public class ProfileMessage {
 
     private String message;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "band_id", referencedColumnName = "id")
     private Band band;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "artist_id", referencedColumnName = "id")
     private Artist artist;
 
